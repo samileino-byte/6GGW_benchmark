@@ -17,3 +17,32 @@ Benchmark stability improvements done:
 5. Frame timing error handling - catches exceptions from Choreographer/GPU setup
 
 6. Version bumped to 1.1.0, shows available RAM at startup
+
+
+BOOTLOADER
+v1.1.0 now includes full Android and iOS distributions:
+
+ANDROID (android/ folder):
+- jni/Android.mk + Application.mk - NDK ndk-build (arm64-v8a, armeabi-v7a, x86_64, x86)
+- jni/ai2orbit_boot_jni.cpp - JNI bridge with phone and tablet init
+- AI2ORBITBoot.kt - Kotlin wrapper class, drop into your app
+- CMakeLists.txt - Alternative CMake NDK build
+- Phone: AI2ORBITBoot().init() then .run()
+- Tablet: AI2ORBITBoot().initTablet() then .run()
+- Returns String array of boot screen text lines for rendering in TextView
+
+iOS (ios/ folder):
+- ai2orbit_boot_c.h/.cpp - Pure C bridge (Swift cant call C++ directly)
+- AI2ORBITBoot.swift - Swift wrapper class
+- CMakeLists.txt - Xcode build (cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS)
+- iPhone: AI2ORBITBoot().run()
+- iPad: AI2ORBITBoot().run(isTablet: true)
+- Auto-detects iPad via UIDevice.current.userInterfaceIdiom == .pad
+
+Form factor tuning:
+- Phone: 1MB DRAM blocks, 24-char loader, 40K init iterations
+- Tablet: 2MB DRAM blocks, 36-char loader, 60K init iterations
+- Desktop: 4MB DRAM blocks, 50-char loader, 100K init iterations
+
+Also included: lib/ (core library), xda/ (separate XDA distribution), desktop CLI, Makefile, CMakeLists.txt for Linux/Windows/macOS.
+9:
